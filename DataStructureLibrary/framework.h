@@ -6,4 +6,5 @@
 #include "DoubleLinkedList.h"
 #include "Stack.h"
 #include "Queue.h"
-#include "Tree.h"
+#include "BinarySearchTree.h"
+#include "AVLTree.h"

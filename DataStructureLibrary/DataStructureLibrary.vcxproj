@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AVLTree.h" />
     <ClInclude Include="DoubleLinkedList.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="List.h" />
@@ -146,7 +147,7 @@
     <ClInclude Include="Queue.h" />
     <ClInclude Include="SingleLinkedList.h" />
     <ClInclude Include="Stack.h" />
-    <ClInclude Include="Tree.h" />
+    <ClInclude Include="BinarySearchTree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

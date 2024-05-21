@@ -390,41 +390,256 @@ namespace DataStructures
 		}
 	};
 
-	TEST_CLASS(Tree_Tests)
+	TEST_CLASS(BinaryTree_Tests)
 	{
+
+		// Add Tests
 		TEST_METHOD(Add_Test)
 		{
-			Tree<int> tree;
-			tree.Add(23);
-			tree.Add(12);
-			tree.Add(55);
-			tree.Add(12);
-			tree.Add(40);
-			tree.Add(100);
-			tree.Add(49);
-			tree.Add(66);
-			tree.Add(1);
-			tree.Add(21);
-
-			Logger::WriteMessage(tree.ToString().c_str());
-		}
-
-		TEST_METHOD(Clear_Test)
-		{
-			Tree<int> tree;
+			BinarySearchTree<int> tree;
 			Assert::IsTrue(tree.Count() == 0);
 
 			tree.Add(23);
+			Assert::IsTrue(tree.Count() == 1);
+			
 			tree.Add(12);
+			Assert::IsTrue(tree.Count() == 2);
+
 			tree.Add(55);
+			Assert::IsTrue(tree.Count() == 3);
+
 			tree.Add(12);
+			Assert::IsTrue(tree.Count() == 4);
+
 			tree.Add(40);
+			Assert::IsTrue(tree.Count() == 5);
+
+			tree.Add(100);
+			Assert::IsTrue(tree.Count() == 6);
+
+			tree.Add(49);
+			Assert::IsTrue(tree.Count() == 7);
+
+			tree.Add(66);
+			Assert::IsTrue(tree.Count() == 8);
+
+			tree.Add(1);
+			Assert::IsTrue(tree.Count() == 9);
+
+			tree.Add(21);
+			Assert::IsTrue(tree.Count() == 10);
+		}
+
+		TEST_METHOD(AddNull_Test)
+		{
+			BinarySearchTree<int> tree;
+			Assert::IsTrue(tree.Count() == 0);
+
+			tree.Add(NULL);
+			Assert::IsTrue(tree.Count() == 1);
+
+			Assert::IsTrue(tree.Contains(0));
+		}
+		
+		// Clear Tests
+		TEST_METHOD(Clear_Test)
+		{
+			BinarySearchTree<int> tree{ 23, 12, 55, 12, 40 };
 			Assert::IsTrue(tree.Count() == 5);
 			Assert::IsTrue(tree.Contains(55));
 
 			tree.Clear();
 			Assert::IsTrue(tree.Count() == 0);
 			Assert::IsFalse(tree.Contains(55));
+		}
+
+		TEST_METHOD(ClearEmpty_Test)
+		{
+			BinarySearchTree<int> tree;
+
+			Assert::IsTrue(tree.Count() == 0);
+			Assert::IsTrue(tree.Height() == 0);
+
+			tree.Clear();
+
+			Assert::IsTrue(tree.Count() == 0);
+			Assert::IsTrue(tree.Height() == 0);
+		}
+
+		// Height Tests
+
+		TEST_METHOD(Height_Test)
+		{
+			BinarySearchTree<int> tree = BinarySearchTree<int>();
+			Assert::IsTrue(tree.Count() == 0);
+			Assert::IsTrue(tree.Height() == 0);
+
+			tree.Add(23);
+			Assert::IsTrue(tree.Count() == 1);
+			Assert::IsTrue(tree.Height() == 1);
+
+			tree.Add(12);
+			tree.Add(55);
+			Assert::IsTrue(tree.Count() == 3);
+			Assert::IsTrue(tree.Height() == 2);
+
+			tree.Add(12);
+			Assert::IsTrue(tree.Count() == 4);
+			Assert::IsTrue(tree.Height() == 3);
+
+			tree.Add(12);
+			Assert::IsTrue(tree.Count() == 5);
+			Assert::IsTrue(tree.Height() == 4);
+
+			tree.Add(66);
+			Assert::IsTrue(tree.Count() == 6);
+			Assert::IsTrue(tree.Height() == 4);
+
+			tree.Clear();
+			Assert::IsTrue(tree.Count() == 0);
+			Assert::IsTrue(tree.Height() == 0);
+		}
+
+		// Remove Tests
+
+		TEST_METHOD(RemoveTwoChildren_Test)
+		{
+			//        23
+			//     12    55
+			//   12    40  60
+			//           45
+			//         44
+			BinarySearchTree<int> tree{ 23, 12, 55, 12, 40, 45, 44, 60 };
+			Assert::IsTrue(tree.InOrder() == "12, 12, 23, 40, 44, 45, 55, 60");
+			Assert::IsTrue(tree.PreOrder() == "23, 12, 12, 55, 40, 45, 44, 60");
+			Assert::IsTrue(tree.PostOrder() == "12, 12, 44, 45, 40, 60, 55, 23");
+			tree.Remove(55);
+
+			
+			//        23
+			//     12    45
+			//   12    40  60
+			//          44
+			Assert::IsTrue(tree.InOrder() == "12, 12, 23, 40, 44, 45, 60");
+			Assert::IsTrue(tree.PreOrder() == "23, 12, 12, 45, 40, 44, 60");
+			Assert::IsTrue(tree.PostOrder() == "12, 12, 44, 40, 60, 45, 23");
+
+		}
+
+		TEST_METHOD(RemoveEmpty_Test)
+		{
+			BinarySearchTree<int> tree;
+			Assert::IsTrue(tree.Count() == 0);
+			Assert::IsTrue(tree.Height() == 0);
+			tree.Remove(400);
+			Assert::IsTrue(tree.Count() == 0);
+			Assert::IsTrue(tree.Height() == 0);
+		}
+
+		// To Array Tests
+
+		TEST_METHOD(ToArray_Test)
+		{
+			BinarySearchTree<int> tree{ 23, 12, 55, 12, 40 };
+			std::vector<int> arr{ 12, 12, 23, 40, 55 };
+			Assert::IsTrue(tree.ToArray() == arr);
+		}
+
+		TEST_METHOD(ToArrayEmpty_Test)
+		{
+			BinarySearchTree<int> tree = BinarySearchTree<int>();
+			std::vector<int> arr;
+			Assert::IsTrue(tree.ToArray() == arr);
+		}
+
+		// In Order Tests
+
+		TEST_METHOD(InOrder_Test)
+		{
+			BinarySearchTree<int> tree{ 23, 12, 55, 12, 40 };
+			Assert::IsTrue(tree.InOrder() == "12, 12, 23, 40, 55");
+		}
+
+		TEST_METHOD(InOrderEmpty_Test)
+		{
+			BinarySearchTree<int> tree;
+			Assert::IsTrue(tree.InOrder() == "");
+		}
+
+		// Pre Order Tests
+
+		TEST_METHOD(PreOrder_Test)
+		{
+			BinarySearchTree<int> tree{ 23, 12, 55, 12, 40 };
+			Assert::IsTrue(tree.PreOrder() == "23, 12, 12, 55, 40");
+		}
+
+		TEST_METHOD(PreOrderEmpty_Test)
+		{
+			BinarySearchTree<int> tree;
+			Assert::IsTrue(tree.PreOrder() == "");
+		}
+
+		// Post Order Tests
+
+		TEST_METHOD(PostOrder_Test)
+		{
+			BinarySearchTree<int> tree{ 23, 12, 55, 12, 40 };
+			Assert::IsTrue(tree.PostOrder() == "12, 12, 40, 55, 23");
+		}
+
+		TEST_METHOD(PostOrderEmpty_Test)
+		{
+			BinarySearchTree<int> tree;
+			Assert::IsTrue(tree.PostOrder() == "");
+		}
+	};
+
+	TEST_CLASS(AVLTree_Tests)
+	{
+		TEST_METHOD(LeftRotation_Test)
+		{
+			AVLTree<int> tree = AVLTree<int>();
+			tree.Add(15);
+			tree.Add(25);
+			tree.Add(35);
+
+			Logger::WriteMessage(tree.PostOrder().c_str());
+
+			Assert::IsTrue("15, 35, 25" == tree.PostOrder());
+		}
+
+		TEST_METHOD(RightLeftRotation_Test)
+		{
+			AVLTree<int> tree = AVLTree<int>();
+			tree.Add(15);
+			tree.Add(25);
+			tree.Add(20);
+
+			Logger::WriteMessage(tree.PostOrder().c_str());
+
+			Assert::IsTrue("15, 25, 20" == tree.PostOrder());
+		}
+
+		TEST_METHOD(ToArray_Test)
+		{
+			AVLTree<int> tree = { 23, 5, 15, 42, 3, 7, 9, 27, 35, 18 };
+
+			std::vector<int> arr = tree.ToArray();
+			std::vector<int> breadth = { 15, 5, 27, 3, 7, 23, 42, 9, 18, 35 };
+
+			Assert::IsTrue(arr == breadth);
+		}
+
+		TEST_METHOD(Remove_Test)
+		{
+			AVLTree<int> tree = { 23, 5, 15, 42, 3, 7, 9, 27, 35, 18 };
+
+			tree.Remove(5);
+
+			std::vector<int> expected = { 15, 7, 27, 3, 9, 23, 42, 18, 35 };
+			std::vector<int> result = tree.ToArray();
+			Assert::IsTrue(expected == result);
 		}
 	};
 }
