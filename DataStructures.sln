@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataStructures", "DataStruc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataStructureLibrary", "DataStructureLibrary\DataStructureLibrary.vcxproj", "{CD2093F6-9160-496A-BFC7-AA71CDC7702D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MazeApp", "MazeApp\MazeApp.vcxproj", "{D4021000-DF81-4B35-8AA0-2ABDEE1C923F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{CD2093F6-9160-496A-BFC7-AA71CDC7702D}.Release|x64.Build.0 = Release|x64
 		{CD2093F6-9160-496A-BFC7-AA71CDC7702D}.Release|x86.ActiveCfg = Release|Win32
 		{CD2093F6-9160-496A-BFC7-AA71CDC7702D}.Release|x86.Build.0 = Release|Win32
+		{D4021000-DF81-4B35-8AA0-2ABDEE1C923F}.Debug|x64.ActiveCfg = Debug|x64
+		{D4021000-DF81-4B35-8AA0-2ABDEE1C923F}.Debug|x64.Build.0 = Debug|x64
+		{D4021000-DF81-4B35-8AA0-2ABDEE1C923F}.Debug|x86.ActiveCfg = Debug|Win32
+		{D4021000-DF81-4B35-8AA0-2ABDEE1C923F}.Debug|x86.Build.0 = Debug|Win32
+		{D4021000-DF81-4B35-8AA0-2ABDEE1C923F}.Release|x64.ActiveCfg = Release|x64
+		{D4021000-DF81-4B35-8AA0-2ABDEE1C923F}.Release|x64.Build.0 = Release|x64
+		{D4021000-DF81-4B35-8AA0-2ABDEE1C923F}.Release|x86.ActiveCfg = Release|Win32
+		{D4021000-DF81-4B35-8AA0-2ABDEE1C923F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

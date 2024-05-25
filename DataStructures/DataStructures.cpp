@@ -1,5 +1,10 @@
 #include "pch.h"
 #include "CppUnitTest.h"
+#include <string>
+#include <sstream>
+#include <map>
+#include <vector>
+#include <tuple>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -597,28 +602,105 @@ namespace DataStructures
 
 	TEST_CLASS(AVLTree_Tests)
 	{
-		TEST_METHOD(LeftRotation_Test)
+		TEST_METHOD(LeftRotationAdd_Test)
 		{
 			AVLTree<int> tree = AVLTree<int>();
 			tree.Add(15);
 			tree.Add(25);
 			tree.Add(35);
 
-			Logger::WriteMessage(tree.PostOrder().c_str());
-
 			Assert::IsTrue("15, 35, 25" == tree.PostOrder());
+			Assert::IsTrue(3 == tree.Count());
+			
 		}
 
-		TEST_METHOD(RightLeftRotation_Test)
+		TEST_METHOD(LeftRotationRemove_Test)
+		{
+			AVLTree<int> tree = AVLTree<int>();
+			tree.Add(10);
+			tree.Add(20);
+			tree.Add(30);
+			tree.Add(40);
+
+			Assert::IsTrue(4 == tree.Count());
+
+			tree.Remove(10);
+			Assert::IsTrue("20, 40, 30" == tree.PostOrder());
+			Assert::IsTrue(3 == tree.Count());
+		}
+
+		TEST_METHOD(RightLeftRotationAdd_Test)
 		{
 			AVLTree<int> tree = AVLTree<int>();
 			tree.Add(15);
 			tree.Add(25);
 			tree.Add(20);
 
-			Logger::WriteMessage(tree.PostOrder().c_str());
+			Assert::IsTrue("15, 25, 20" == tree.PostOrder());
+		}
+
+		TEST_METHOD(RightLeftRotationRemove_Test)
+		{
+			AVLTree<int> tree = AVLTree<int>();
+			tree.Add(20);
+			tree.Add(10);
+			tree.Add(40);
+			tree.Add(30);
+
+			Assert::IsTrue(4 == tree.Count());
+
+			tree.Remove(10);
+			Assert::IsTrue("20, 40, 30" == tree.PostOrder());
+			Assert::IsTrue(3 == tree.Count());
+		}
+
+		TEST_METHOD(RightRotationAdd_Test)
+		{
+			AVLTree<int> tree = AVLTree<int>();
+			tree.Add(35);
+			tree.Add(25);
+			tree.Add(15);
+
+			Assert::IsTrue("15, 35, 25" == tree.PostOrder());
+		}
+
+		TEST_METHOD(RightRotationRemove_Test)
+		{
+			AVLTree<int> tree = AVLTree<int>();
+			tree.Add(40);
+			tree.Add(30);
+			tree.Add(20);
+			tree.Add(10);
+
+			Assert::IsTrue(4 == tree.Count());
+
+			tree.Remove(40);
+			Assert::IsTrue("10, 30, 20" == tree.PostOrder());
+			Assert::IsTrue(3 == tree.Count());
+		}
+
+		TEST_METHOD(LeftRightRotationAdd_Test)
+		{
+			AVLTree<int> tree = AVLTree<int>();
+			tree.Add(25);
+			tree.Add(15);
+			tree.Add(20);
 
 			Assert::IsTrue("15, 25, 20" == tree.PostOrder());
+		}
+
+		TEST_METHOD(LeftRightRotationRemove_Test)
+		{
+			AVLTree<int> tree = AVLTree<int>();
+			tree.Add(30);
+			tree.Add(40);
+			tree.Add(10);
+			tree.Add(20);
+			Assert::IsTrue(4 == tree.Count());
+
+			tree.Remove(40);
+			Assert::IsTrue("10, 30, 20" == tree.PostOrder());
+			Assert::IsTrue(3 == tree.Count());
 		}
 
 		TEST_METHOD(ToArray_Test)
@@ -627,6 +709,16 @@ namespace DataStructures
 
 			std::vector<int> arr = tree.ToArray();
 			std::vector<int> breadth = { 15, 5, 27, 3, 7, 23, 42, 9, 18, 35 };
+
+			Assert::IsTrue(arr == breadth);
+		}
+
+		TEST_METHOD(ToArrayEmpty_Test)
+		{
+			AVLTree<int> tree;
+
+			std::vector<int> arr = tree.ToArray();
+			std::vector<int> breadth = {};
 
 			Assert::IsTrue(arr == breadth);
 		}
@@ -641,5 +733,202 @@ namespace DataStructures
 			std::vector<int> result = tree.ToArray();
 			Assert::IsTrue(expected == result);
 		}
+	};
+
+	TEST_CLASS(Maze_Tests)
+	{
+		TEST_METHOD(Dijkstra_Test1)
+		{
+			Graph<char> graph({ 'A', 'B', 'C', 'D', 'E', 'F' });
+
+			graph.AddNodeEdges('A', { {'B', 1} });
+			graph.AddNodeEdges('B', { {'A', 1}, {'C', 1}, {'D', 1}, {'F', 1} });
+			graph.AddNodeEdges('C', { {'B', 1} });
+			graph.AddNodeEdges('D', { {'B', 1}, {'E', 1}, {'F', 1} });
+			graph.AddNodeEdges('E', { {'D', 1}, {'F', 1} });
+			graph.AddNodeEdges('F', { {'B', 1}, {'D', 1}, {'E', 1} });
+
+			Maze<char> maze(graph, 'A', 'E');
+			auto result = maze.SolveMaze();
+			auto& path = std::get<0>(result);
+			auto distance = std::get<1>(result);
+
+			std::stringstream ss;
+			for (char node : path) {
+				ss << node << " ";
+			}
+
+			Assert::IsTrue(distance == 3);
+			std::vector<char> expectedPath = { 'A', 'B', 'D', 'E' };
+			Logger::WriteMessage(ss.str().c_str());
+			Assert::IsTrue(path == expectedPath);
+		}
+
+		TEST_METHOD(Dijkstra_Test2)
+		{
+			Graph<char> graph({ 'A', 'B', 'Z', 'X', 'Y', 'K', 'R', 'C', 'P' });
+
+			graph.AddNodeEdges('Z', { {'X', 1} });
+			graph.AddNodeEdges('X', { {'Z', 1}, {'A', 1}, {'R', 1} });
+			graph.AddNodeEdges('R', { {'X', 1}, {'P', 1} });
+			graph.AddNodeEdges('P', { {'R', 1} });
+			graph.AddNodeEdges('A', { {'X', 1}, {'B', 1} });
+			graph.AddNodeEdges('B', { {'A', 1}, {'Y', 1} });
+			graph.AddNodeEdges('Y', { {'B', 1}, {'C', 1} });
+			graph.AddNodeEdges('C', { {'Y', 1}, {'K', 1} });
+			graph.AddNodeEdges('K', { {'C', 1} });
+
+			Maze<char> maze(graph, 'Z', 'K');
+			auto result = maze.SolveMaze();
+			auto& path = std::get<0>(result);
+			auto distance = std::get<1>(result);
+
+			std::stringstream ss;
+			for (char node : path) {
+				ss << node << " ";
+			}
+
+			std::vector<char> expectedPath = { 'Z', 'X', 'A', 'B', 'Y', 'C', 'K' };
+			Logger::WriteMessage(ss.str().c_str());
+			Assert::IsTrue(distance == 6);
+			Assert::IsTrue(path == expectedPath);
+		}
+
+		TEST_METHOD(Dijkstra_Test3)
+		{
+			Graph<char> graph({ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'Z' });
+
+			graph.AddNodeEdges('A', { {'B', 1} });
+			graph.AddNodeEdges('B', { {'A', 1}, {'C', 1}, {'I', 1} });
+			graph.AddNodeEdges('C', { {'B', 1}, {'D', 1} });
+			graph.AddNodeEdges('D', { {'C', 1}, {'E', 1} });
+			graph.AddNodeEdges('E', { {'D', 1}, {'F', 1}, {'N', 1} });
+			graph.AddNodeEdges('F', { {'E', 1}, {'G', 1} });
+			graph.AddNodeEdges('G', { {'F', 1}, {'H', 1} });
+			graph.AddNodeEdges('H', { {'G', 1}, {'Z', 1} });
+			graph.AddNodeEdges('I', { {'B', 1}, {'J', 1} });
+			graph.AddNodeEdges('J', { {'I', 1}, {'K', 1}, {'M', 1} });
+			graph.AddNodeEdges('K', { {'J', 1}, {'L', 1} });
+			graph.AddNodeEdges('L', { {'K', 1}, {'Z', 1} });
+			graph.AddNodeEdges('M', { {'J', 1}, {'N', 1}, {'O', 1} });
+			graph.AddNodeEdges('O', { {'M', 1}, {'N', 1} });
+			graph.AddNodeEdges('N', { {'M', 1}, {'O', 1} });
+			graph.AddNodeEdges('Z', { {'L', 1}, {'H', 1} });
+
+			Maze<char> maze(graph, 'A', 'Z');
+			auto result = maze.SolveMaze();
+			auto& path = std::get<0>(result);
+			auto distance = std::get<1>(result);
+
+			std::stringstream ss;
+			for (char node : path) {
+				ss << node << " ";
+			}
+
+			Logger::WriteMessage(ss.str().c_str());
+
+			std::vector<char> expectedPath = { 'A', 'B', 'I', 'J', 'K', 'L', 'Z' };
+			Assert::IsTrue(path == expectedPath);
+		}
+
+		TEST_METHOD(Dijkstra_Test_DifferentWeights)
+		{
+			Graph<char> graph({ 'A', 'B', 'C', 'D', 'E' });
+
+			graph.AddNodeEdges('A', { {'B', 1}, {'C', 4} });
+			graph.AddNodeEdges('B', { {'A', 1}, {'C', 2}, {'D', 5} });
+			graph.AddNodeEdges('C', { {'A', 4}, {'B', 2}, {'D', 1} });
+			graph.AddNodeEdges('D', { {'B', 5}, {'C', 1}, {'E', 3} });
+			graph.AddNodeEdges('E', { {'D', 3} });
+
+			Maze<char> maze(graph, 'A', 'E');
+			auto result = maze.SolveMaze();
+			auto& path = std::get<0>(result);
+			auto distance = std::get<1>(result);
+
+			std::stringstream ss;
+			for (char node : path) {
+				ss << node << " ";
+			}
+
+			Logger::WriteMessage(ss.str().c_str());
+
+			std::vector<char> expectedPath = { 'A', 'B', 'C', 'D', 'E' };
+			Assert::IsTrue(distance == 7);
+			Assert::IsTrue(path == expectedPath);
+		}
+
+		TEST_METHOD(Dijkstra_Test_NoPath)
+		{
+			Graph<char> graph({ 'A', 'B', 'C' });
+
+			graph.AddNodeEdges('A', { {'B', 1} });
+			graph.AddNodeEdges('C', { {'B', 1} });
+
+			Maze<char> maze(graph, 'A', 'C');
+			auto result = maze.SolveMaze();
+			auto& path = std::get<0>(result);
+			auto distance = std::get<1>(result);
+
+			std::stringstream ss;
+			for (char node : path) {
+				ss << node << " ";
+			}
+
+			Logger::WriteMessage(ss.str().c_str());
+
+			std::vector<char> expectedPath = {};
+			Assert::IsTrue(distance == std::numeric_limits<size_t>::max());
+			Assert::IsTrue(path == expectedPath);
+		}
+
+		TEST_METHOD(Dijkstra_Test_SingleNode)
+		{
+			Graph<char> graph({ 'A' });
+
+			Maze<char> maze(graph, 'A', 'A');
+			auto result = maze.SolveMaze();
+			auto& path = std::get<0>(result);
+			auto distance = std::get<1>(result);
+
+			std::stringstream ss;
+			for (char node : path) {
+				ss << node << " ";
+			}
+
+			Logger::WriteMessage(ss.str().c_str());
+
+			std::vector<char> expectedPath = { 'A' };
+			Assert::IsTrue(distance == 0);
+			Assert::IsTrue(path == expectedPath);
+		}
+
+		TEST_METHOD(Dijkstra_Test_SelfLoopNodes)
+		{
+			Graph<char> graph({ 'A', 'B', 'C', 'D', 'E' });
+
+			graph.AddNodeEdges('A', { {'A', 1} });
+			graph.AddNodeEdges('B', { {'B', 2} });
+			graph.AddNodeEdges('C', { {'C', 3} });
+			graph.AddNodeEdges('D', { {'D', 4} });
+			graph.AddNodeEdges('E', { {'E', 5} });
+
+			Maze<char> maze(graph, 'A', 'E');
+			auto result = maze.SolveMaze();
+			auto& path = std::get<0>(result);
+			auto distance = std::get<1>(result);
+
+			std::stringstream ss;
+			for (char node : path) {
+				ss << node << " ";
+			}
+
+			Logger::WriteMessage(ss.str().c_str());
+
+			std::vector<char> expectedPath = {};
+			Assert::IsTrue(distance == std::numeric_limits<size_t>::max());
+			Assert::IsTrue(path == expectedPath);
+		}
+
 	};
 }

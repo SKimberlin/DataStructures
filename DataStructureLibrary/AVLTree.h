@@ -12,23 +12,36 @@ public:
 	{
 		for (const T& arg : args) Add(arg);
 	}
-
+	/*
+	* @brief Uses recursion to find where to put value, while unwinding it automatically balances the tree
+	* @brief This method has a time complexity of O(log n)
+	* @param Value to be added
+	*/
 	void Add(const T& value) override
 	{
 		Add(root, value);
+		numberOfNodes++;
 	}
-
+	/*
+	* @brief Uses recursion to find what node to remove, while unwinding it automatically balances the tree
+	* @brief This method has a time complexity of O(log n)
+	* @param Value to be removed
+	*/
 	void Remove(const T& value) override
 	{
 		Remove(root, value);
 	}
-
+	/*
+	* @brief Uses a queue to add nodes the first time it sees them, breadth first
+	* @brief This method has a time complexity of O(n)
+	* @return A vector of the values in breadth first order
+	*/
 	std::vector<T> ToArray() override
 	{
 		
 		std::vector<T> array;
 		Queue<Node*> queue;
-		queue.Enqueue(root);
+		if (root) queue.Enqueue(root);
 		while (!queue.empty())
 		{
 			Node* current = queue.Dequeue();
@@ -42,7 +55,7 @@ public:
 	}
 
 private:
-
+	// Add and remove are O(log n) because each time it compares, it halves the current data set size
 	void Add(Node*& node, const T& value)
 	{
 		if (node)
@@ -94,8 +107,13 @@ private:
 		Balance(node);
 	}
 
+	/*
+	* @brief This method has a time complexity of O(1)
+	* @param Node to balance
+	*/
 	void Balance(Node*& node)
 	{
+		if (!node) return;
 		short balance = (node->right ? node->right->height : 0) - (node->left ? node->left->height : 0);
 		if (balance > 1) {
 			short subBalance = (node->right->left ? node->right->left->height : 0) - (node->right->right ? node->right->right->height : 0);
@@ -112,7 +130,11 @@ private:
 			RightRotation(node);
 		}
 	}
-
+	
+	/*
+	* @brief This method has a time complexity of O(1)
+	* @param Parent of pivot node
+	*/
 	void LeftRotation(Node*& node)
 	{
 		Node* newRoot = node->right;
@@ -123,6 +145,10 @@ private:
 		UpdateHeight(node);
 	}
 
+	/*
+	* @brief This method has a time complexity of O(1)
+	* @param Parent of pivot node
+	*/
 	void RightRotation(Node*& node)
 	{
 		Node* newRoot = node->left;
@@ -133,9 +159,14 @@ private:
 		UpdateHeight(node);
 	}
 
+	/*
+	* @brief sets the height of the given node to its greatest childs height +1
+	* @brief This method has a time complexity of O(1)
+	* @param Node to update the height for
+	*/
 	void UpdateHeight(Node*& node)
 	{
-		node->height = std::max((node->left ? node->left->height : 0), (node->right ? node->right->height : 0)) + 1;
+		if (node) node->height = std::max((node->left ? node->left->height : 0), (node->right ? node->right->height : 0)) + 1;
 	}
 
 };

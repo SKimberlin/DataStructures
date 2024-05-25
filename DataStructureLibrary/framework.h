@@ -8,3 +8,5 @@
 #include "Queue.h"
 #include "BinarySearchTree.h"
 #include "AVLTree.h"
+#include "Graph.h"
+#include "Maze.h"
